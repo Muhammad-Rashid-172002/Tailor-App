@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/Screens/home_screen/home_screen.dart';
 import 'package:flutter_application_1/Screens/home_screen/onboarding_screen/onboarding_Screens.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -58,19 +60,35 @@ class _SplashscreenState extends State<Splashscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/Adobe Express - file.png',
-              width: 200,
-              height: 200,
+              'assets/a-tailor-sitting-and-stitching-clothes-on-a-stitching-machine-with-an-inchtape-put-around-his-neck-vector-removebg-preview.png',
+              width: 250,
+              height: 250,
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Welcome To Artha...',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(
+                  "TailorMate",
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )
+                .animate()
+                .fadeIn(delay: 500.ms, duration: 1000.ms)
+                .moveY(begin: 30, end: 0, curve: Curves.easeOut),
+
+            const SizedBox(height: 10),
+
+            Text(
+                  "Custom Stitching | Timeless Style",
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+                .animate()
+                .fadeIn(delay: 900.ms)
+                .slideY(begin: 0.5, duration: 800.ms),
             SizedBox(height: 20),
             const SpinKitCircle(color: Colors.white, size: 50.0),
           ],

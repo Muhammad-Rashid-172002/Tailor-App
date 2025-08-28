@@ -15,20 +15,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "title": "Note Down Expenses",
-      "description": "Daily note your expenses to help manage money",
-      "image": "assets/images/Adobe Express - file (1).png",
-    },
-    {
-      "title": "Simple Money Management",
+      "title": "Your personal tailor, now in your pocket",
       "description":
-          "Get your notifications or alert when you do the over expenses",
-      "image": "assets/images/Adobe Express - file (3).png",
+          "Book fittings, design your style,\n and get custom stitching  all with a tap",
+      "image":
+          "assets/a-tailor-sitting-and-stitching-clothes-on-a-stitching-machine-with-an-inchtape-put-around-his-neck-vector-removebg-preview.png",
     },
     {
-      "title": "Easy to Track and Analyze",
-      "description": "Tracking your expense help make sure you don't overspend",
-      "image": "assets/images/Adobe Express - file (2).png",
+      "title": "Tailored fashion, made easy.",
+      "description":
+          "From measurements to doorstep delivery \n we’ve stitched it all together.",
+      "image": "assets/Adobe Express - file (1).png",
+    },
+    {
+      "title": "Style that fits you perfectly.",
+      "description":
+          "TCustomize, track, and manage your tailoring orders anytime, anywhere",
+      "image": "assets/Adobe Express - file.png",
     },
   ];
 
