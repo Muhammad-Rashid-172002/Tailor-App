@@ -18,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -25,33 +26,63 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
+        // Create user in Firebase Auth
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
               email: emailController.text.trim(),
               password: passwordController.text.trim(),
             );
 
+        // Save user profile in Firestore under /users/{uid}
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
             .set({
-              'name': nameController.text.trim(),
+              'ownerId': userCredential.user!.uid,
+              'fullName': nameController.text.trim(),
               'email': emailController.text.trim(),
-              'createdAt': Timestamp.now(),
-            });
+              'phone': '', // optional, can update later
+              'createdAt':
+                  FieldValue.serverTimestamp(), // ✅ better than Timestamp.now()
+            }, SetOptions(merge: true));
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        // Navigate to Home Screen
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
       } on FirebaseAuthException catch (e) {
+        String errorMessage = 'Signup failed';
+        if (e.code == 'email-already-in-use') {
+          errorMessage = 'This email is already registered.';
+        } else if (e.code == 'weak-password') {
+          errorMessage = 'Password is too weak.';
+        } else if (e.code == 'invalid-email') {
+          errorMessage = 'Invalid email format.';
+        }
+
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(e.message ?? 'Signup failed')));
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("An unexpected error occurred.")),
+        );
       } finally {
-        setState(() => _isLoading = false);
+        if (mounted) setState(() => _isLoading = false);
       }
     }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override

@@ -17,9 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime? _lastBackPressed;
 
   final List<Widget> _pages = [
-    DashboardScreen(),
+    HomePage(),
     CustomersScreen(),
-    Receiptscreen(),
+    Receiptscreen(
+      customerId: "CUSTOMER_DOC_ID",
+    ), // Pass a valid customerId here
     Profile(),
   ];
 
@@ -35,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => Scaffold(
-            appBar: AppBar(title: Text("Add Something")),
-            body: Center(child: Text("Add Screen Placeholder")),
+            appBar: AppBar(title: const Text("Add Something")),
+            body: const Center(child: Text("Add Screen Placeholder")),
           ),
         ),
       );
@@ -46,11 +48,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> _onWillPop() async {
     final now = DateTime.now();
     if (_lastBackPressed == null ||
-        now.difference(_lastBackPressed!) > Duration(seconds: 2)) {
+        now.difference(_lastBackPressed!) > const Duration(seconds: 2)) {
       _lastBackPressed = now;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Press again to exit')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Press again to exit',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+          behavior: SnackBarBehavior.floating, // floating snackbar
+          margin: const EdgeInsets.only(
+            bottom: 80, // move up a bit above bottom nav
+            left: 100,
+            right: 100,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: const BorderSide(color: Colors.white, width: 1),
+          ),
+          backgroundColor: Colors.blueGrey,
+          duration: const Duration(seconds: 2),
+          elevation: 6,
+        ),
+      );
       return Future.value(false);
     }
     return Future.value(true); // Exit app
