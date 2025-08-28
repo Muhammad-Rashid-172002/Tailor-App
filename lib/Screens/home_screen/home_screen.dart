@@ -19,29 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     HomePage(),
     CustomersScreen(),
-    Receiptscreen(
-      customerId: "CUSTOMER_DOC_ID",
-    ), // Pass a valid customerId here
+    Receiptscreen(customerId: "CUSTOMER_DOC_ID"),
     Profile(),
   ];
 
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-    });
-  }
-
-  void _openAddScreenSafely() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(title: const Text("Add Something")),
-            body: const Center(child: Text("Add Screen Placeholder")),
-          ),
-        ),
-      );
     });
   }
 
@@ -54,27 +38,27 @@ class _HomeScreenState extends State<HomeScreen> {
         SnackBar(
           content: const Text(
             'Press again to exit',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
             textAlign: TextAlign.center,
           ),
-          behavior: SnackBarBehavior.floating, // floating snackbar
-          margin: const EdgeInsets.only(
-            bottom: 80, // move up a bit above bottom nav
-            left: 100,
-            right: 100,
-          ),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 80, left: 60, right: 60),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: const BorderSide(color: Colors.white, width: 1),
+            side: const BorderSide(color: Colors.amber, width: 1),
           ),
-          backgroundColor: Colors.blueGrey,
+          backgroundColor: Colors.black87.withOpacity(0.9),
           duration: const Duration(seconds: 2),
-          elevation: 6,
+          elevation: 8,
         ),
       );
       return Future.value(false);
     }
-    return Future.value(true); // Exit app
+    return Future.value(true);
   }
 
   @override
@@ -83,61 +67,84 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: () async {
         bool exit = await _onWillPop();
         if (exit) {
-          SystemNavigator.pop(); // Closes the app
+          SystemNavigator.pop();
         }
         return false;
       },
       child: Scaffold(
+        backgroundColor: const Color(0xFF121212), // Luxury dark background
         body: IndexedStack(index: _currentIndex, children: _pages),
-        bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8,
-          color: Colors.blueGrey,
-          elevation: 10,
+
+        // 🔥 Luxury Bottom Navigation
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.9),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.amber.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                // Left side icons
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.home_outlined,
-                        color: _currentIndex == 0 ? Colors.amber : Colors.grey,
-                      ),
-                      onPressed: () => _onTabTapped(0),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.people_outline,
-                        color: _currentIndex == 1 ? Colors.amber : Colors.white,
-                      ),
-                      onPressed: () => _onTabTapped(1),
-                    ),
+                    _navIcon(Icons.home_outlined, 0),
+                    const SizedBox(width: 20),
+                    _navIcon(Icons.people_outline, 1),
                   ],
                 ),
+                // Right side icons
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.receipt_long_outlined,
-                        color: _currentIndex == 2 ? Colors.amber : Colors.white,
-                      ),
-                      onPressed: () => _onTabTapped(2),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.person_outline,
-                        color: _currentIndex == 3 ? Colors.amber : Colors.white,
-                      ),
-                      onPressed: () => _onTabTapped(3),
-                    ),
+                    _navIcon(Icons.receipt_long_outlined, 2),
+                    const SizedBox(width: 20),
+                    _navIcon(Icons.person_outline, 3),
                   ],
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  // 🔥 Custom Icon with Luxury Highlight
+  Widget _navIcon(IconData icon, int index) {
+    final bool isActive = _currentIndex == index;
+    return GestureDetector(
+      onTap: () => _onTabTapped(index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.amber.withOpacity(0.15) : Colors.transparent,
+          shape: BoxShape.circle,
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: Colors.amber.withOpacity(0.4),
+                    blurRadius: 12,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [],
+        ),
+        child: Icon(
+          icon,
+          size: 28,
+          color: isActive ? Colors.amber : Colors.grey.shade400,
         ),
       ),
     );

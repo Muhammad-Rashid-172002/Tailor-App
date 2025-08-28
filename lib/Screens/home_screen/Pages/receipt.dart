@@ -23,6 +23,12 @@ class _ReceiptscreenState extends State<Receiptscreen> {
   bool _isPaid = false;
   String _searchQuery = "";
 
+  // 🎨 Premium Luxury Color Palette
+  final Color premiumPrimary = const Color(0xFFFFB300); // Amber
+  final Color premiumSecondary = const Color(0xFF37474F); // Blue Grey 800
+  final Color premiumBackground = const Color(0xFFFFFFFF); // White
+  final Color premiumAccent = const Color(0xFFF57C00); // Deep Orange
+
   @override
   void dispose() {
     _sizeController.dispose();
@@ -37,7 +43,6 @@ class _ReceiptscreenState extends State<Receiptscreen> {
   ///  Show Add/Edit Receipt Form
   void _showReceiptForm({String? docId, Map<String, dynamic>? data}) {
     if (data != null) {
-      // Editing
       _sizeController.text = data['size'] ?? '';
       _quantityController.text = (data['quantity'] ?? '').toString();
       _amountController.text = (data['amount'] ?? '').toString();
@@ -46,7 +51,6 @@ class _ReceiptscreenState extends State<Receiptscreen> {
       _nameController.text = data['customerName'] ?? '';
       _phoneController.text = data['customerPhone'] ?? '';
     } else {
-      // Adding new
       _sizeController.clear();
       _quantityController.clear();
       _amountController.clear();
@@ -59,145 +63,193 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.transparent, // ✅ Transparent so gradient shows
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 16,
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+      builder: (ctx) => Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Color(0xFFFFF8E1)], // soft gradient
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _nameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Customer Name",
-                  labelStyle: TextStyle(color: Colors.white70),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Phone No",
-                  labelStyle: TextStyle(color: Colors.white70),
-                ),
-              ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                dropdownColor: Colors.grey[850],
-                value: _selectedCloth,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Cloth Type",
-                  labelStyle: TextStyle(color: Colors.white70),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white70),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header bar
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: premiumPrimary.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-                items: const ["Shirt", "Pant", "Suit", "Kurta", "Blouse"]
-                    .map(
-                      (cloth) =>
-                          DropdownMenuItem(value: cloth, child: Text(cloth)),
-                    )
-                    .toList(),
-                onChanged: (val) {
-                  if (val != null) setState(() => _selectedCloth = val);
-                },
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _sizeController,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Size",
-                  labelStyle: TextStyle(color: Colors.white70),
+                Text(
+                  docId == null ? "Add New Receipt" : "Update Receipt",
+                  style: TextStyle(
+                    color: premiumPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _quantityController,
-                keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Quantity",
-                  labelStyle: TextStyle(color: Colors.white70),
+                const SizedBox(height: 20),
+
+                // Form fields
+                _buildTextField("Customer Name", _nameController),
+                const SizedBox(height: 14),
+                _buildTextField(
+                  "Phone No",
+                  _phoneController,
+                  keyboard: TextInputType.phone,
                 ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: "Amount",
-                  labelStyle: TextStyle(color: Colors.white70),
+                const SizedBox(height: 14),
+                DropdownButtonFormField<String>(
+                  dropdownColor: premiumSecondary,
+                  value: _selectedCloth,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    labelText: "Cloth Type",
+                    labelStyle: TextStyle(color: premiumPrimary),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: premiumPrimary.withOpacity(0.6),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: premiumAccent, width: 2),
+                    ),
+                  ),
+                  items: const ["Shirt", "Pant", "Suit", "Kurta", "Blouse"]
+                      .map(
+                        (cloth) => DropdownMenuItem(
+                          value: cloth,
+                          child: Text(
+                            cloth,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null) setState(() => _selectedCloth = val);
+                  },
                 ),
-              ),
-              SwitchListTile(
-                value: _isPaid,
-                onChanged: (val) => setState(() => _isPaid = val),
-                title: const Text(
-                  "Paid",
-                  style: TextStyle(color: Colors.white),
+                const SizedBox(height: 14),
+                _buildTextField("Size", _sizeController),
+                const SizedBox(height: 14),
+                _buildTextField(
+                  "Quantity",
+                  _quantityController,
+                  keyboard: TextInputType.number,
                 ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                onPressed: () async {
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user == null) return;
+                const SizedBox(height: 14),
+                _buildTextField(
+                  "Amount",
+                  _amountController,
+                  keyboard: TextInputType.number,
+                ),
+                const SizedBox(height: 10),
+                SwitchListTile(
+                  value: _isPaid,
+                  onChanged: (val) => setState(() => _isPaid = val),
+                  activeColor: premiumAccent,
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text(
+                    "Paid",
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                ),
 
-                  final qty = int.tryParse(_quantityController.text.trim());
-                  final amt = double.tryParse(_amountController.text.trim());
-                  if (qty == null || amt == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Enter valid numbers")),
-                    );
-                    return;
-                  }
+                const SizedBox(height: 24),
 
-                  final orderData = {
-                    "customerName": _nameController.text.trim(),
-                    "customerPhone": _phoneController.text.trim(),
-                    "clothType": _selectedCloth,
-                    "size": _sizeController.text.trim(),
-                    "quantity": qty,
-                    "amount": amt,
-                    "isPaid": _isPaid,
-                    "createdAt": FieldValue.serverTimestamp(),
-                  };
+                // Action button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: premiumAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      elevation: 4,
+                    ),
+                    onPressed: () async {
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
 
-                  final ordersRef = FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(user.uid)
-                      .collection("customers")
-                      .doc(widget.customerId)
-                      .collection("orders");
+                      final qty = int.tryParse(_quantityController.text.trim());
+                      final amt = double.tryParse(
+                        _amountController.text.trim(),
+                      );
+                      if (qty == null || amt == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text("Enter valid numbers"),
+                            backgroundColor: Colors.redAccent,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        );
+                        return;
+                      }
 
-                  if (docId == null) {
-                    // Add
-                    await ordersRef.add(orderData);
-                  } else {
-                    // Update
-                    await ordersRef.doc(docId).update(orderData);
-                  }
+                      final orderData = {
+                        "customerName": _nameController.text.trim(),
+                        "customerPhone": _phoneController.text.trim(),
+                        "clothType": _selectedCloth,
+                        "size": _sizeController.text.trim(),
+                        "quantity": qty,
+                        "amount": amt,
+                        "isPaid": _isPaid,
+                        "createdAt": FieldValue.serverTimestamp(),
+                      };
 
-                  Navigator.of(ctx).pop();
-                },
-                child: Text(docId == null ? "Add Receipt" : "Update Receipt"),
-              ),
-            ],
+                      final ordersRef = FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(user.uid)
+                          .collection("customers")
+                          .doc(widget.customerId)
+                          .collection("orders");
+
+                      if (docId == null) {
+                        await ordersRef.add(orderData);
+                      } else {
+                        await ordersRef.doc(docId).update(orderData);
+                      }
+
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text(
+                      docId == null ? "Add Receipt" : "Update Receipt",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -224,129 +276,163 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Receipts", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Text(
+          "Receipts",
+          style: TextStyle(color: premiumPrimary, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
               onChanged: (val) {
                 setState(() => _searchQuery = val.toLowerCase());
               },
               decoration: InputDecoration(
                 hintText: "Search by Name or Phone",
-                hintStyle: const TextStyle(color: Colors.white54),
+                hintStyle: const TextStyle(color: Colors.black54),
                 filled: true,
-                fillColor: Colors.grey[800],
-                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                fillColor: premiumBackground,
+                prefixIcon: Icon(Icons.search, color: premiumPrimary),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(
+                    color: premiumPrimary.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-      body: user == null
-          ? const Center(child: Text("Not logged in"))
-          : StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(user.uid)
-                  .collection("customers")
-                  .doc(widget.customerId)
-                  .collection("orders")
-                  .orderBy("createdAt", descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final receipts = snapshot.data!.docs.where((doc) {
-                  final data = doc.data() as Map<String, dynamic>;
-                  final name = (data['customerName'] ?? '')
-                      .toString()
-                      .toLowerCase();
-                  final phone = (data['customerPhone'] ?? '')
-                      .toString()
-                      .toLowerCase();
-                  return name.contains(_searchQuery) ||
-                      phone.contains(_searchQuery);
-                }).toList();
-
-                if (receipts.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No receipts found",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: receipts.length,
-                  itemBuilder: (context, index) {
-                    final doc = receipts[index];
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Color(0xFFFFF8E1)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: user == null
+            ? const Center(child: Text("Not logged in"))
+            : StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(user.uid)
+                    .collection("customers")
+                    .doc(widget.customerId)
+                    .collection("orders")
+                    .orderBy("createdAt", descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final receipts = snapshot.data!.docs.where((doc) {
                     final data = doc.data() as Map<String, dynamic>;
+                    final name = (data['customerName'] ?? '')
+                        .toString()
+                        .toLowerCase();
+                    final phone = (data['customerPhone'] ?? '')
+                        .toString()
+                        .toLowerCase();
+                    return name.contains(_searchQuery) ||
+                        phone.contains(_searchQuery);
+                  }).toList();
 
-                    return Slidable(
-                      key: ValueKey(doc.id),
-                      endActionPane: ActionPane(
-                        motion: const DrawerMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (_) =>
-                                _showReceiptForm(docId: doc.id, data: data),
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            icon: Icons.edit,
-                            label: 'Edit',
-                          ),
-                          SlidableAction(
-                            onPressed: (_) => _confirmDelete(context, doc.id),
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: 'Delete',
-                          ),
-                        ],
-                      ),
-                      child: Card(
-                        color: Colors.blueGrey[700],
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            "${data['customerName'] ?? 'Unknown'} (${data['customerPhone'] ?? 'N/A'})",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            "${data['clothType']} - Size: ${data['size']}\nQty: ${data['quantity']} | Rs ${data['amount']}",
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          trailing: Icon(
-                            data['isPaid'] ? Icons.check_circle : Icons.pending,
-                            color: data['isPaid'] ? Colors.green : Colors.red,
-                          ),
-                        ),
+                  if (receipts.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No receipts found",
+                        style: TextStyle(color: Colors.black54),
                       ),
                     );
-                  },
-                );
-              },
-            ),
+                  }
+
+                  return ListView.builder(
+                    itemCount: receipts.length,
+                    itemBuilder: (context, index) {
+                      final doc = receipts[index];
+                      final data = doc.data() as Map<String, dynamic>;
+
+                      return Slidable(
+                        key: ValueKey(doc.id),
+                        endActionPane: ActionPane(
+                          motion: const DrawerMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (_) =>
+                                  _showReceiptForm(docId: doc.id, data: data),
+                              backgroundColor: premiumAccent,
+                              foregroundColor: Colors.white,
+                              icon: Icons.edit,
+                              label: 'Edit',
+                            ),
+                            SlidableAction(
+                              onPressed: (_) => _confirmDelete(context, doc.id),
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete,
+                              label: 'Delete',
+                            ),
+                          ],
+                        ),
+                        child: Card(
+                          color: premiumBackground,
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: premiumPrimary.withOpacity(0.3),
+                            ),
+                          ),
+                          elevation: 3,
+                          child: ListTile(
+                            title: Text(
+                              "${data['customerName'] ?? 'Unknown'} (${data['customerPhone'] ?? 'N/A'})",
+                              style: TextStyle(
+                                color: premiumPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              "${data['clothType']} - Size: ${data['size']}\nQty: ${data['quantity']} | Rs ${data['amount']}",
+                              style: TextStyle(
+                                color: premiumSecondary.withOpacity(0.8),
+                              ),
+                            ),
+                            trailing: Icon(
+                              data['isPaid']
+                                  ? Icons.check_circle
+                                  : Icons.pending,
+                              color: data['isPaid']
+                                  ? premiumAccent
+                                  : Colors.red,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showReceiptForm(),
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.add),
+        backgroundColor: premiumPrimary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -355,40 +441,136 @@ class _ReceiptscreenState extends State<Receiptscreen> {
   void _confirmDelete(BuildContext context, String docId) {
     showDialog(
       context: context,
+      barrierDismissible: false, // Prevent accidental dismiss
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.grey[850],
+        backgroundColor: Colors.transparent, // ✅ Transparent so gradient shows
         shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: premiumPrimary, width: 2),
+          borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text(
-          'Delete Receipt',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Are you sure you want to delete this receipt?',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.blueAccent),
+        contentPadding: EdgeInsets.zero, // ✅ so gradient fills entire dialog
+        content: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.white, Color(0xFFFFF8E1)], // soft gradient
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title row
+                Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: premiumPrimary,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Confirm Deletion',
+                      style: TextStyle(
+                        color: premiumPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Content text
+                const Text(
+                  'This action cannot be undone.\nAre you sure you want to delete this receipt?',
+                  style: TextStyle(color: Colors.black87, fontSize: 15),
+                ),
+                const SizedBox(height: 20),
+
+                // Actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: premiumAccent, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: premiumAccent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 10,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        await _deleteReceipt(docId);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Receipt deleted'),
+                            backgroundColor: premiumAccent,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(ctx); // close dialog
-              await _deleteReceipt(docId);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Receipt deleted')));
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  /// 📝 Reusable text field builder
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType keyboard = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboard,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: premiumPrimary),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: premiumPrimary.withOpacity(0.5)),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: premiumPrimary),
+        ),
       ),
     );
   }

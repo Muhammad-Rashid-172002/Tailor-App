@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+class AppColors {
+  static const Color primary = Color(0xFFFFB300); // Amber
+  static const Color secondary = Color(0xFF263238); // Blue Grey Darker
+  static const Color background = Color(0xFFF5F5F5); // Light Grey
+  static const Color accent = Color(0xFFF57C00); // Deep Orange
+}
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -68,96 +75,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _showTailorDialog(Map<String, String> tailor) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.grey[850],
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Text(
-          tailor["name"]!,
-          style: const TextStyle(color: Colors.white),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundImage: NetworkImage(tailor["image"]!),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "${tailor["orders"]} orders",
-              style: const TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              tailor["desc"] ?? "No description",
-              style: const TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Close",
-              style: TextStyle(color: Colors.blueAccent),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showNewsDialog(Map<String, String> newsItem) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.grey[850],
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.white, width: 2), // White border
-          borderRadius: BorderRadius.circular(16), // Optional rounded corners
-        ),
-        title: Text(
-          newsItem["title"]!,
-          style: const TextStyle(color: Colors.white), // White title text
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.network(newsItem["image"]!),
-            const SizedBox(height: 10),
-            Text(
-              newsItem["time"]!,
-              style: const TextStyle(color: Colors.white70), // Time text
-            ),
-            const SizedBox(height: 10),
-            Text(
-              newsItem["content"] ?? "No details",
-              style: const TextStyle(color: Colors.white), // Content text
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Close",
-              style: TextStyle(color: Colors.blueAccent), // Close button style
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   String _getGreeting() {
     final hour = DateTime.now().hour;
-
     if (hour >= 5 && hour < 12) {
       return "Good Morning";
     } else if (hour >= 12 && hour < 17) {
@@ -169,47 +88,181 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  /// 🔹 Show Tailor Details Dialog
+  void _showTailorDialog(Map<String, String> tailor) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: AppColors.background,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(tailor["image"]!),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                tailor["name"]!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.secondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                tailor["desc"]!,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "${tailor["orders"]} completed orders",
+                style: const TextStyle(color: AppColors.primary),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Close",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 🔹 Show News Details Dialog
+  void _showNewsDialog(Map<String, String> article) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: AppColors.background,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+              child: Image.network(
+                article["image"]!,
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    article["title"]!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.secondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    article["content"]!,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    article["time"]!,
+                    style: const TextStyle(color: AppColors.primary),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.accent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      "Close",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[800],
+        automaticallyImplyLeading: false,
+        elevation: 0,
+
         title: Text(
           "${_getGreeting()}, $userName ",
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
 
-      backgroundColor: Colors.blueGrey[900],
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Calendar Card
+              /// Calendar Card
               Card(
                 margin: const EdgeInsets.only(bottom: 20),
-                color: Colors.grey[850],
+                color: AppColors.primary.withOpacity(0.15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                elevation: 4,
+                elevation: 6,
+                shadowColor: AppColors.secondary.withOpacity(0.2),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         DateFormat('MMMM yyyy').format(DateTime.now()),
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppColors.secondary,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 14),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: List.generate(7, (index) {
@@ -237,19 +290,23 @@ class _HomePageState extends State<HomePage> {
                           if (isToday) {
                             return Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
+                                horizontal: 14,
+                                vertical: 12,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius: BorderRadius.circular(12),
+                                gradient: const LinearGradient(
+                                  colors: [AppColors.primary, AppColors.accent],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
                               ),
                               child: Column(
                                 children: [
                                   Text(
                                     daysOfWeek[index],
                                     style: const TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -257,7 +314,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     '${currentDay.day}',
                                     style: const TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
@@ -271,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   daysOfWeek[index],
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.secondary,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -279,7 +336,7 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   '${currentDay.day}',
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black87,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -294,22 +351,17 @@ class _HomePageState extends State<HomePage> {
               ),
 
               /// Recommended Tailors
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Recommended Tailors",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              const Text(
+                "Recommended Tailors",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.secondary,
+                ),
               ),
               const SizedBox(height: 12),
               SizedBox(
-                height: 180,
+                height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: tailors.length,
@@ -317,18 +369,24 @@ class _HomePageState extends State<HomePage> {
                     final t = tailors[index];
                     return GestureDetector(
                       onTap: () => _showTailorDialog(t),
-                      child: Container(
-                        width: 140,
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.all(8),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                        width: 150,
+                        margin: const EdgeInsets.only(right: 14),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.grey[850],
-                          borderRadius: BorderRadius.circular(16),
+                          gradient: const LinearGradient(
+                            colors: [AppColors.background, Color(0xFFFFF3E0)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(18),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
+                              color: AppColors.secondary.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -339,21 +397,21 @@ class _HomePageState extends State<HomePage> {
                               radius: 40,
                               backgroundImage: NetworkImage(t["image"]!),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 10),
                             Text(
                               t["name"]!,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Text(
                               "${t["orders"]} orders",
                               style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.amber,
+                                fontSize: 13,
+                                color: AppColors.secondary,
                               ),
                             ),
                           ],
@@ -364,25 +422,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
               /// Latest News
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Latest News",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              const Text(
+                "Latest News",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.secondary,
+                ),
               ),
               const SizedBox(height: 12),
               SizedBox(
-                height: 200,
+                height: 220,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: news.length,
@@ -391,16 +444,20 @@ class _HomePageState extends State<HomePage> {
                     return GestureDetector(
                       onTap: () => _showNewsDialog(n),
                       child: Container(
-                        width: 160,
-                        margin: const EdgeInsets.only(right: 12),
+                        width: 170,
+                        margin: const EdgeInsets.only(right: 14),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.grey[850],
+                          gradient: const LinearGradient(
+                            colors: [AppColors.background, Color(0xFFFFF3E0)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(18),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
+                              color: AppColors.secondary.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -409,17 +466,17 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             ClipRRect(
                               borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(16),
+                                top: Radius.circular(18),
                               ),
                               child: Image.network(
                                 n["image"]!,
-                                height: 110,
+                                height: 120,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(10.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -430,15 +487,15 @@ class _HomePageState extends State<HomePage> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
-                                      color: Colors.white,
+                                      color: Colors.black87,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 6),
                                   Text(
                                     n["time"]!,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      color: Colors.amber,
+                                      color: AppColors.secondary,
                                     ),
                                   ),
                                 ],

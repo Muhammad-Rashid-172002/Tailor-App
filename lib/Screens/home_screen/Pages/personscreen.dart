@@ -87,169 +87,181 @@ class _ProfileState extends State<Profile> {
     final user = _auth.currentUser;
 
     return Scaffold(
-      backgroundColor: Colors.grey[850],
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber),
         ),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // ✅ Profile Image
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 120,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.teal[100],
-                      image: profileImageUrl != null
-                          ? DecorationImage(
-                              image: NetworkImage(profileImageUrl!),
-                              fit: BoxFit.cover,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Color(0xFFFFF8E1)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const SizedBox(height: 100),
+
+              // ✅ Profile Image
+              Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.teal[100],
+                        image: profileImageUrl != null
+                            ? DecorationImage(
+                                image: NetworkImage(profileImageUrl!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: profileImageUrl == null
+                          ? const Icon(
+                              Icons.person,
+                              size: 60,
+                              color: Colors.white,
                             )
                           : null,
                     ),
-                    child: profileImageUrl == null
-                        ? const Icon(
-                            Icons.person,
-                            size: 60,
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: InkWell(
+                        onTap: () {
+                          _showImagePickerOptions();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.teal,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt,
                             color: Colors.white,
-                          )
-                        : null,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: InkWell(
-                      onTap: () {
-                        _showImagePickerOptions();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Colors.teal,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 20,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // User Email
-            Text(
-              user?.email ?? 'No email available',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              // User Email
+              Text(
+                user?.email ?? 'No email available',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Tailor Account',
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // Account Info Card
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 4,
                 color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Tailor Account',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            // Account Info Card
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 4,
-              color: Colors.blueGrey[900],
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.teal[100],
-                  child: const Icon(Icons.email, color: Colors.teal),
-                ),
-                title: const Text(
-                  "Account Info",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.teal[100],
+                    child: const Icon(Icons.email, color: Colors.teal),
                   ),
+                  title: const Text(
+                    "Account Info",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  subtitle: Text(
+                    user?.email ?? 'Not available',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                  trailing: const Icon(Icons.edit, color: Colors.teal),
+                  onTap: () {
+                    _showEditProfileDialog(context, user);
+                  },
                 ),
-                subtitle: Text(
-                  user?.email ?? 'Not available',
-                  style: const TextStyle(color: Colors.white70),
-                ),
-                trailing: const Icon(Icons.edit, color: Colors.teal),
-                onTap: () {
-                  _showEditProfileDialog(context, user);
-                },
               ),
-            ),
 
-            const Spacer(),
+              const Spacer(),
 
-            // Logout Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.logout, color: Colors.white),
-                label: const Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                onPressed: () {
-                  _showLogoutDialog(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              // Logout Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.logout, color: Colors.white),
+                  label: const Text(
+                    'Logout',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  onPressed: () {
+                    _showLogoutDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange[700],
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-            // Delete Account Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.delete_forever, color: Colors.white),
-                label: const Text(
-                  'Delete Account',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                onPressed: () {
-                  _showDeleteAccountDialog(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[600],
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              // Delete Account Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.delete_forever, color: Colors.white),
+                  label: const Text(
+                    'Delete Account',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  onPressed: () {
+                    _showDeleteAccountDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red[600],
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -292,17 +304,17 @@ class _ProfileState extends State<Profile> {
   void _showImagePickerOptions() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (ctx) => Wrap(
         children: [
           ListTile(
-            leading: const Icon(Icons.photo, color: Colors.white),
+            leading: const Icon(Icons.photo, color: Colors.black),
             title: const Text(
               "Pick from Gallery",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
             onTap: () {
               Navigator.pop(ctx);
@@ -310,10 +322,10 @@ class _ProfileState extends State<Profile> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.camera_alt, color: Colors.white),
+            leading: const Icon(Icons.camera_alt, color: Colors.black),
             title: const Text(
               "Take a Picture",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
             onTap: () {
               Navigator.pop(ctx);
@@ -366,7 +378,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  /// ✅ Edit Profile Dialog (fixed overflow)
+  /// ✅ Edit Profile Dialog (light theme)
   void _showEditProfileDialog(BuildContext context, User? user) {
     final TextEditingController nameController = TextEditingController(
       text: user?.displayName ?? "",
@@ -379,10 +391,10 @@ class _ProfileState extends State<Profile> {
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
-        backgroundColor: Colors.grey[850],
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: Colors.white, width: 1),
+          side: const BorderSide(color: Colors.black12, width: 1),
         ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -392,7 +404,7 @@ class _ProfileState extends State<Profile> {
               const Text(
                 "Edit Profile",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -400,12 +412,12 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 16),
               TextField(
                 controller: nameController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
                   labelText: "Name",
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal),
@@ -415,12 +427,12 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 12),
               TextField(
                 controller: emailController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
                   labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal),
@@ -431,12 +443,12 @@ class _ProfileState extends State<Profile> {
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
                   labelText: "Password (for security)",
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.black54),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal),
@@ -451,7 +463,7 @@ class _ProfileState extends State<Profile> {
                     onPressed: () => Navigator.pop(ctx),
                     child: const Text(
                       "Cancel",
-                      style: TextStyle(color: Colors.white70),
+                      style: TextStyle(color: Colors.black54),
                     ),
                   ),
                   ElevatedButton(
