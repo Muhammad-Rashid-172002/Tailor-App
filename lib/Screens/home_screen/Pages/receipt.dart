@@ -23,7 +23,7 @@ class _ReceiptscreenState extends State<Receiptscreen> {
   bool _isPaid = false;
   String _searchQuery = "";
 
-  // 🎨 Premium Luxury Color Palette
+  // Premium Luxury Color Palette
   final Color premiumPrimary = const Color(0xFFFFB300); // Amber
   final Color premiumSecondary = const Color(0xFF37474F); // Blue Grey 800
   final Color premiumBackground = const Color(0xFFFFFFFF); // White
@@ -63,7 +63,7 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // ✅ Transparent so gradient shows
+      backgroundColor: Colors.transparent, //  Transparent so gradient shows
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -256,7 +256,7 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     );
   }
 
-  /// ✅ Delete Receipt
+  ///  Delete Receipt
   Future<void> _deleteReceipt(String docId) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -437,18 +437,18 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     );
   }
 
-  /// ✅ Confirm Delete Receipt
+  ///  Confirm Delete Receipt
   void _confirmDelete(BuildContext context, String docId) {
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent accidental dismiss
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.transparent, // ✅ Transparent so gradient shows
+        backgroundColor: Colors.transparent, //  Transparent so gradient shows
         shape: RoundedRectangleBorder(
           side: BorderSide(color: premiumPrimary, width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
-        contentPadding: EdgeInsets.zero, // ✅ so gradient fills entire dialog
+        contentPadding: EdgeInsets.zero, //  so gradient fills entire dialog
         content: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -552,7 +552,7 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     );
   }
 
-  /// 📝 Reusable text field builder
+  ///  Reusable text field builder
   Widget _buildTextField(
     String label,
     TextEditingController controller, {

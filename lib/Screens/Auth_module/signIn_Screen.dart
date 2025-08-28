@@ -53,7 +53,7 @@ class _SigninScreenState extends State<SigninScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white, Color(0xFFFFF8E1)], // ✅ Gradient background
+            colors: [Colors.white, Color(0xFFFFF8E1)], //  Gradient background
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -71,7 +71,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF37474F), // ✅ BlueGrey
+                    color: const Color(0xFF37474F), //  BlueGrey
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -108,7 +108,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                 style: GoogleFonts.playfairDisplay(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFFFB300), // ✅ Amber
+                                  color: const Color(0xFFFFB300), //  Amber
                                 ),
                               ),
                               const SizedBox(height: 25),

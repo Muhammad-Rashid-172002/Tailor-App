@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: const Color(0xFF121212), // Luxury dark background
         body: IndexedStack(index: _currentIndex, children: _pages),
 
-        // 🔥 Luxury Bottom Navigation
+        //  Luxury Bottom Navigation
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.9),
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔥 Custom Icon with Luxury Highlight
+  //  Custom Icon with Luxury Highlight
   Widget _navIcon(IconData icon, int index) {
     final bool isActive = _currentIndex == index;
     return GestureDetector(

@@ -112,7 +112,7 @@ class _ProfileState extends State<Profile> {
             children: [
               const SizedBox(height: 100),
 
-              // ✅ Profile Image
+              // Profile Image
               Center(
                 child: Stack(
                   children: [
@@ -378,7 +378,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  /// ✅ Edit Profile Dialog (light theme)
+  /// Edit Profile Dialog (light theme)
   void _showEditProfileDialog(BuildContext context, User? user) {
     final TextEditingController nameController = TextEditingController(
       text: user?.displayName ?? "",

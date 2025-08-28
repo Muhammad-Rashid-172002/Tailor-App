@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  /// 🔹 Show Tailor Details Dialog
+  ///  Show Tailor Details Dialog
   void _showTailorDialog(Map<String, String> tailor) {
     showDialog(
       context: context,
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 🔹 Show News Details Dialog
+  ///  Show News Details Dialog
   void _showNewsDialog(Map<String, String> article) {
     showDialog(
       context: context,

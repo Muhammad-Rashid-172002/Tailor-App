@@ -14,7 +14,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   String searchQuery = "";
 
-  // 🎨 Premium Luxury Color Palette
+  //  Premium Luxury Color Palette
   final Color premiumPrimary = const Color(0xFFFFB300); // Amber / Golden Yellow
   final Color premiumSecondary = const Color(0xFF37474F); // Blue Grey 800
   final Color premiumAccent = const Color(0xFFF57C00); // Deep Orange
@@ -50,7 +50,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
         ),
         centerTitle: true,
         elevation: 4,
-        backgroundColor: Colors.transparent, // ✅ Transparent so gradient shows
+        backgroundColor: Colors.transparent, // Transparent so gradient shows
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -98,7 +98,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               ),
             ),
 
-            // 📌 Customer list
+            //  Customer list
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -261,7 +261,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     );
   }
 
-  /// ✅ Add Customer Dialog
+  /// Add Customer Dialog
   void _showAddCustomerDialog(BuildContext context) {
     final nameController = TextEditingController();
     final emailController = TextEditingController();
@@ -369,8 +369,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // ✅ makes it full height when needed
-      backgroundColor: Colors.transparent, // ✅ so gradient/rounded corners show
+      isScrollControlled: true, //  makes it full height when needed
+      backgroundColor: Colors.transparent, //  so gradient/rounded corners show
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -383,8 +383,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 right: 20,
                 top: 20,
                 bottom:
-                    MediaQuery.of(ctx).viewInsets.bottom +
-                    20, // ✅ keyboard safe
+                    MediaQuery.of(ctx).viewInsets.bottom + 20, //  keyboard safe
               ),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -598,7 +597,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     );
   }
 
-  /// 📝 Helper for Premium text fields
+  ///  Helper for Premium text fields
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(
       controller: controller,

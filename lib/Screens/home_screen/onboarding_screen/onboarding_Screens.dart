@@ -41,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // ✅ Luxury gradient background
+        //  Luxury gradient background
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFFFF8E1), Colors.white],
@@ -67,7 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // ✅ Image with animation
+                          //  Image with animation
                           Image.asset(
                                 onboardingData[index]['image']!,
                                 height: 250,
@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                           const SizedBox(height: 50),
 
-                          // ✅ Title
+                          //  Title
                           Text(
                                 onboardingData[index]['title']!,
                                 style: GoogleFonts.playfairDisplay(
@@ -101,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                           const SizedBox(height: 16),
 
-                          // ✅ Description
+                          //  Description
                           Text(
                                 onboardingData[index]['description']!,
                                 style: GoogleFonts.roboto(
@@ -121,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              /// ✅ Dots Indicator
+              /// Dots Indicator
               SmoothPageIndicator(
                 controller: _controller,
                 count: onboardingData.length,
@@ -136,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
               const SizedBox(height: 40),
 
-              /// ✅ Button / Loader
+              ///  Button / Loader
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: isLoading
@@ -145,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(
                             0xFF37474F,
-                          ), // ✅ BlueGrey button
+                          ), //  BlueGrey button
                           minimumSize: const Size(double.infinity, 55),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -176,8 +176,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               : "NEXT",
                           style: const TextStyle(
                             fontSize: 18,
-                            color:
-                                Colors.white, // ✅ Contrast on BlueGrey button
+                            color: Colors.white, //  Contrast on BlueGrey button
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
                           ),
