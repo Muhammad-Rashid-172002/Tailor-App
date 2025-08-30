@@ -561,7 +561,7 @@ class _ReceiptscreenState extends State<Receiptscreen> {
     return TextField(
       controller: controller,
       keyboardType: keyboard,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(color: premiumPrimary),

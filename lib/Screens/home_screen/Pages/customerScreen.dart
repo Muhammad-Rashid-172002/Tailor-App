@@ -273,48 +273,72 @@ class _CustomersScreenState extends State<CustomersScreen> {
         return StatefulBuilder(
           builder: (ctx, setState) {
             return AlertDialog(
-              backgroundColor: premiumSecondary,
               shape: RoundedRectangleBorder(
                 side: BorderSide(color: premiumPrimary, width: 2),
                 borderRadius: BorderRadius.circular(18),
               ),
-              title: Text(
-                "Add Customer",
-                style: TextStyle(
-                  color: premiumPrimary,
-                  fontWeight: FontWeight.bold,
+              titlePadding: EdgeInsets.zero, // To align gradient properly
+              contentPadding: EdgeInsets.zero,
+              title: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.white, Color(0xFFFFF8E1)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(18),
+                  ),
+                ),
+                child: Text(
+                  "Add Customer",
+                  style: TextStyle(
+                    color: premiumPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildTextField("Full Name", nameController),
-                    const SizedBox(height: 10),
-                    _buildTextField("Email", emailController),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      dropdownColor: Colors.white,
-                      value: selectedCloth,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        labelText: "Cloth Type",
-                        labelStyle: TextStyle(color: premiumPrimary),
+              content: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.white, Color(0xFFFFF8E1)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildTextField("Full Name", nameController),
+                      const SizedBox(height: 10),
+                      _buildTextField("Email", emailController),
+                      const SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        dropdownColor: Colors.white,
+                        value: selectedCloth,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          labelText: "Cloth Type",
+                          labelStyle: TextStyle(color: premiumPrimary),
+                        ),
+                        items: ["Shirt", "Pant", "Suit", "Kurta", "Blouse"]
+                            .map(
+                              (cloth) => DropdownMenuItem(
+                                value: cloth,
+                                child: Text(cloth),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => selectedCloth = value);
+                          }
+                        },
                       ),
-                      items: ["Shirt", "Pant", "Suit", "Kurta", "Blouse"]
-                          .map(
-                            (cloth) => DropdownMenuItem(
-                              value: cloth,
-                              child: Text(cloth),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => selectedCloth = value);
-                        }
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               actions: [
